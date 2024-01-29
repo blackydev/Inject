@@ -1,4 +1,4 @@
-package com.patryklikus.winter.inject;
+package com.patryklikus.winter.beans;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -11,5 +11,5 @@ import static java.lang.annotation.ElementType.TYPE;
  */
 @Target(TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Config {
+public @interface Beans {
 }

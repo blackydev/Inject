@@ -1,6 +1,6 @@
 package com.patryklikus.winter.lifecycle;
 
-public interface Initializable {
+public interface Initable {
     /**
      * Prepares the object to make it usable.
      */
