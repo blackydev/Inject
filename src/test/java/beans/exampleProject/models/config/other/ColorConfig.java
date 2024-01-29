@@ -1,10 +1,10 @@
-package injection.exampleProject.models.config.other;
+package beans.exampleProject.models.config.other;
 
-import com.patryklikus.winter.injection.Beans;
+import com.patryklikus.winter.beans.Beans;
 import com.patryklikus.winter.lifecycle.Close;
 import com.patryklikus.winter.lifecycle.Init;
 import com.patryklikus.winter.lifecycle.Run;
-import injection.exampleProject.models.Color;
+import beans.exampleProject.models.Color;
 
 import java.util.List;
 

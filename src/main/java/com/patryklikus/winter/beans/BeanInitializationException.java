@@ -1,4 +1,4 @@
-package com.patryklikus.winter.injection;
+package com.patryklikus.winter.beans;
 
 public class BeanInitializationException extends RuntimeException {
     public BeanInitializationException(Throwable cause) {

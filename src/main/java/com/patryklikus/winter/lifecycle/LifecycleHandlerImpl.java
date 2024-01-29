@@ -1,7 +1,7 @@
 package com.patryklikus.winter.lifecycle;
 
-import com.patryklikus.winter.injection.Bean.Bean;
-import com.patryklikus.winter.injection.Bean.RunConfig;
+import com.patryklikus.winter.beans.Bean.Bean;
+import com.patryklikus.winter.beans.Bean.RunConfig;
 
 import java.io.Closeable;
 import java.io.IOException;

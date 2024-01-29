@@ -1,6 +1,6 @@
-package com.patryklikus.winter.injection;
+package com.patryklikus.winter.beans;
 
-import com.patryklikus.winter.injection.Bean.Bean;
+import com.patryklikus.winter.beans.Bean.Bean;
 import com.patryklikus.winter.lifecycle.Initable;
 import dev.mccue.guava.reflect.TypeToken;
 

@@ -1,11 +1,11 @@
 package utils;
 
-import com.patryklikus.winter.injection.Beans;
+import com.patryklikus.winter.beans.Beans;
 import com.patryklikus.winter.utils.searcher.ClassSearcher;
 import com.patryklikus.winter.utils.searcher.ClassSearcherImpl;
-import injection.exampleProject.Main;
-import injection.exampleProject.models.config.FruitConfig;
-import injection.exampleProject.models.config.other.ColorConfig;
+import beans.exampleProject.Main;
+import beans.exampleProject.models.config.FruitConfig;
+import beans.exampleProject.models.config.other.ColorConfig;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

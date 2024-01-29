@@ -1,9 +1,9 @@
-package injection.exampleProject.models.config;
+package beans.exampleProject.models.config;
 
-import com.patryklikus.winter.injection.Beans;
-import injection.exampleProject.models.fruits.Apple;
-import injection.exampleProject.models.fruits.Banana;
-import injection.exampleProject.models.fruits.Fruit;
+import com.patryklikus.winter.beans.Beans;
+import beans.exampleProject.models.fruits.Apple;
+import beans.exampleProject.models.fruits.Banana;
+import beans.exampleProject.models.fruits.Fruit;
 
 @Beans
 public class FruitConfig {

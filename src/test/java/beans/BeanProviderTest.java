@@ -1,13 +1,13 @@
-package injection;
+package beans;
 
-import com.patryklikus.winter.injection.Bean.Bean;
-import com.patryklikus.winter.injection.BeanProvider;
-import com.patryklikus.winter.injection.BeanProviderImpl;
+import com.patryklikus.winter.beans.Bean.Bean;
+import com.patryklikus.winter.beans.BeanProvider;
+import com.patryklikus.winter.beans.BeanProviderImpl;
 import dev.mccue.guava.reflect.TypeToken;
-import injection.exampleProject.Main;
-import injection.exampleProject.models.Color;
-import injection.exampleProject.models.fruits.Apple;
-import injection.exampleProject.models.fruits.Fruit;
+import beans.exampleProject.Main;
+import beans.exampleProject.models.Color;
+import beans.exampleProject.models.fruits.Apple;
+import beans.exampleProject.models.fruits.Fruit;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,8 +30,8 @@ public class BeanProviderTest {
     }
 
     @Test
-    @DisplayName("Should contain correct number of injects in storage")
-    void getInjectsTest() throws NoSuchFieldException, IllegalAccessException {
+    @DisplayName("Should contain correct number of beans in storage")
+    void getBeansTest() throws NoSuchFieldException, IllegalAccessException {
         Field beansField = BeanProviderImpl.class.getDeclaredField("beans");
         beansField.setAccessible(true);
 
@@ -41,8 +41,8 @@ public class BeanProviderTest {
     }
 
     @Test
-    @DisplayName("Should return each inject with correct value and type")
-    void getInjectTest() {
+    @DisplayName("Should return each bean with correct value and type")
+    void getBeanTest() {
         String expectedRed = "red";
         String expectedBlue = "blue";
         List<String> expectedList = List.of("Hello", "World", "!");
@@ -66,8 +66,8 @@ public class BeanProviderTest {
     }
 
     @Test
-    @DisplayName("Should return injects with proper configuration")
-    void getInjectLifePriorityTest() {
+    @DisplayName("Should return beans with proper configuration")
+    void getBeanLifePriorityTest() {
         Bean<Color> blueBean = beanProvider.getBean("blueColor", Color.class);
         Bean<Color> redBean = beanProvider.getBean("redColor", Color.class);
 

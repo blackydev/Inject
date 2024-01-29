@@ -1,9 +1,9 @@
 package lifecycle;
 
-import com.patryklikus.winter.injection.Bean.Bean;
-import com.patryklikus.winter.injection.Bean.CloseConfig;
-import com.patryklikus.winter.injection.Bean.InitConfig;
-import com.patryklikus.winter.injection.Bean.RunConfig;
+import com.patryklikus.winter.beans.Bean.Bean;
+import com.patryklikus.winter.beans.Bean.CloseConfig;
+import com.patryklikus.winter.beans.Bean.InitConfig;
+import com.patryklikus.winter.beans.Bean.RunConfig;
 import com.patryklikus.winter.lifecycle.Initable;
 import com.patryklikus.winter.lifecycle.LifecycleHandler;
 import com.patryklikus.winter.lifecycle.LifecycleHandlerImpl;
@@ -78,7 +78,7 @@ public class LifecycleHandlerTest {
             executor.when(() -> Executors.newScheduledThreadPool(2)).thenReturn(executorService);
 
             lifecycleHandler.init();
-            
+
             if (withFixedDelay)
                 verify(executorService).scheduleWithFixedDelay((Runnable) bean.value(), delay, 4, timeUnit);
             else

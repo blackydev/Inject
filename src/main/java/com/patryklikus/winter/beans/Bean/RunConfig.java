@@ -1,4 +1,4 @@
-package com.patryklikus.winter.injection.Bean;
+package com.patryklikus.winter.beans.Bean;
 
 import com.patryklikus.winter.lifecycle.Run;
 

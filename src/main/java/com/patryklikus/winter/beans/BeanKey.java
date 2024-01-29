@@ -1,4 +1,4 @@
-package com.patryklikus.winter.injection;
+package com.patryklikus.winter.beans;
 
 import java.util.Objects;
 

@@ -1,4 +1,4 @@
-package injection.exampleProject.models;
+package beans.exampleProject.models;
 
 import java.util.Objects;
 
