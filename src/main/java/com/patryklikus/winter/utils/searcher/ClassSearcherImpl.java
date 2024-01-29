@@ -10,18 +10,8 @@ import java.util.Set;
 import static java.util.Collections.emptySet;
 import static java.util.stream.Collectors.toCollection;
 
-public enum ClassSearcherImpl implements ClassSearcher {
-    INSTANCE;
+public class ClassSearcherImpl implements ClassSearcher {
     private static final String ERROR_MESSAGE = "Unexpected error occurs when try to find all classes inside package";
-
-    @Override
-    public Set<Class<?>> getClassesRecursively(String packageName, Class<? extends Annotation> annotation) throws ClassSearchException {
-        return getDirectory(packageName)
-                .map(dir -> findClasses(new HashSet<>(), dir, packageName))
-                .orElse(emptySet()).stream()
-                .filter(clazz -> clazz.isAnnotationPresent(annotation))
-                .collect(toCollection(HashSet::new));
-    }
 
     /**
      * @return Physical directory where package is stored
@@ -33,6 +23,15 @@ public enum ClassSearcherImpl implements ClassSearcher {
                 .map(URL::getFile)
                 .map(File::new)
                 .filter(File::isDirectory);
+    }
+
+    @Override
+    public Set<Class<?>> getClassesRecursively(String packageName, Class<? extends Annotation> annotation) throws ClassSearchException {
+        return getDirectory(packageName)
+                .map(dir -> findClasses(new HashSet<>(), dir, packageName))
+                .orElse(emptySet()).stream()
+                .filter(clazz -> clazz.isAnnotationPresent(annotation))
+                .collect(toCollection(HashSet::new));
     }
 
     /**
