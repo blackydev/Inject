@@ -2,16 +2,20 @@ package com.patryklikus.winter.lifecycle;
 
 import java.io.Closeable;
 
-// todo add descriptions
+/**
+ * Handles all beans which implements {@link Initable}, {@link Runnable} or {@link Closeable}.
+ */
 public interface LifecycleHandler extends Initable, Closeable {
     /**
-     * Initialize {@link Initable} and run {@link Runnable} object. Saves {@link Closeable} b
+     * Initialize {@link Initable} objects with provided order.
+     * Run {@link Runnable} objects.
+     * Saves objects {@link Closeable} to be closed later.
      */
     @Override
     void init();
 
     /**
-     * Closes all {@link Closeable} objects.
+     * Closes all {@link Closeable} objects saved in {@link LifecycleHandler#init}.
      */
     @Override
     void close();

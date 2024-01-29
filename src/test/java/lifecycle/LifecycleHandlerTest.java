@@ -11,6 +11,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.InOrder;
 import org.mockito.MockedStatic;
 
 import java.io.Closeable;
@@ -32,14 +33,14 @@ public class LifecycleHandlerTest {
     void initTest() {
         List<Bean<?>> mockedBeans = mockBeans(true, false, false);
         List<Bean<?>> notSorted = toNotSorted(mockedBeans);
+        mockedBeans.stream().map(Bean::initConfig).map(InitConfig::order).forEach(System.out::println);
         lifecycleHandler = new LifecycleHandlerImpl(notSorted);
 
         lifecycleHandler.init();
-
+        InOrder inOrder = inOrder(mockedBeans.stream().map(Bean::value).toArray());
         for (var mock : mockedBeans) {
-            verify((Initable) mock.value()).init();
+            inOrder.verify((Initable) mock.value()).init();
         }
-        // todo check order
     }
 
     @Test
@@ -64,9 +65,12 @@ public class LifecycleHandlerTest {
     @ValueSource(booleans = {true, false})
     @DisplayName("Should schedule object in proper way")
     void runExecutorServicesTest(boolean withFixedDelay) {
+        int corePoolSize = 2;
+        int delay = 3;
+        TimeUnit timeUnit = TimeUnit.MINUTES;
         var bean = (withFixedDelay)
-                ? createRunnableMock(2, 3, 4, TimeUnit.MINUTES)
-                : createRunnableMock(2, 3, 0, TimeUnit.MINUTES);
+                ? createRunnableMock(corePoolSize, delay, 4, timeUnit)
+                : createRunnableMock(corePoolSize, delay, 0, timeUnit);
 
         lifecycleHandler = new LifecycleHandlerImpl(List.of(bean));
         try (MockedStatic<Executors> executor = mockStatic(Executors.class)) {
@@ -74,10 +78,11 @@ public class LifecycleHandlerTest {
             executor.when(() -> Executors.newScheduledThreadPool(2)).thenReturn(executorService);
 
             lifecycleHandler.init();
+            
             if (withFixedDelay)
-                verify(executorService).scheduleWithFixedDelay((Runnable) bean.value(), 3, 4, TimeUnit.MINUTES);
+                verify(executorService).scheduleWithFixedDelay((Runnable) bean.value(), delay, 4, timeUnit);
             else
-                verify(executorService).schedule((Runnable) bean.value(), 3, TimeUnit.MINUTES);
+                verify(executorService).schedule((Runnable) bean.value(), delay, timeUnit);
         }
     }
 
@@ -95,15 +100,15 @@ public class LifecycleHandlerTest {
 
         lifecycleHandler.close();
 
+        InOrder inOrder = inOrder(mockedBeans.stream().map(Bean::value).toArray());
         for (var mock : mockedBeans) {
-            verify((Closeable) mock.value()).close();
+            inOrder.verify((Closeable) mock.value()).close();
         }
-        // todo check order
     }
 
     private Bean<?> createRunnableMock(int corePoolSize, long delay, long repetitionPeriod, TimeUnit timeUnit) {
         var bean = mock(Bean.class);
-        var template = mock(TestTemplate.class);
+        var template = new TestTemplate();
 
         when(bean.value()).thenReturn(template);
         when(bean.initConfig()).thenReturn(new InitConfig(false, (short) 0));
@@ -122,13 +127,13 @@ public class LifecycleHandlerTest {
             var bean = mock(Bean.class);
             when(bean.value()).thenReturn(template);
 
-            var initConfig = new InitConfig(initable, (short) (i / 4 - TEST_BEANS_CAPACITY / 8));
+            var initConfig = new InitConfig(initable, (short) (i - TEST_BEANS_CAPACITY / 2));
             when(bean.initConfig()).thenReturn(initConfig);
 
             var runConfig = new RunConfig(runnable, 1, 0, 0, TimeUnit.SECONDS);
             when(bean.runConfig()).thenReturn(runConfig);
 
-            var closeConfig = new CloseConfig(closeable, (short) (i / 4 - TEST_BEANS_CAPACITY / 8));
+            var closeConfig = new CloseConfig(closeable, (short) (i - TEST_BEANS_CAPACITY / 2));
             when(bean.closeConfig()).thenReturn(closeConfig);
             mocks.add(bean);
         }

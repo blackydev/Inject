@@ -111,9 +111,9 @@ public class BeanProviderImpl implements BeanProvider {
         try {
             beanValue = method.invoke(config, args);
         } catch (Exception e) {
-            String message = String.format("Error when trying to use configuration method: %s#%s",
+            // todo implement better errors
+            String message = String.format("Error when trying to use beans method: %s#%s",
                     config.getClass(), method.getName()
-                    // todo implement better information in exception
             );
             throw new BeanInitializationException(message, e);
         }
