@@ -2,7 +2,8 @@ package com.patryklikus.winter.beans;
 
 import com.patryklikus.winter.beans.Bean.Bean;
 import com.patryklikus.winter.lifecycle.Initable;
-import dev.mccue.guava.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 
 public interface BeanProvider extends Initable {
     /**
@@ -17,5 +18,5 @@ public interface BeanProvider extends Initable {
 
     <T> Bean<T> getBean(String name, Class<T> classType);
 
-    <T> Bean<T> getBean(String name, TypeToken<T> classType);
+    <T> Bean<T> getBean(String name, Type classType);
 }

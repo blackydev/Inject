@@ -1,24 +1,21 @@
 package beans;
 
-import com.patryklikus.winter.beans.Bean.Bean;
-import com.patryklikus.winter.beans.BeanProvider;
-import com.patryklikus.winter.beans.BeanProviderImpl;
-import dev.mccue.guava.reflect.TypeToken;
 import beans.exampleProject.Main;
 import beans.exampleProject.models.Color;
 import beans.exampleProject.models.fruits.Apple;
 import beans.exampleProject.models.fruits.Fruit;
+import com.patryklikus.winter.beans.Bean.Bean;
+import com.patryklikus.winter.beans.BeanProvider;
+import com.patryklikus.winter.beans.BeanProviderImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
-import java.util.List;
 import java.util.Map;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class BeanProviderTest {
     private BeanProvider beanProvider;
@@ -45,7 +42,6 @@ public class BeanProviderTest {
     void getBeanTest() {
         String expectedRed = "red";
         String expectedBlue = "blue";
-        List<String> expectedList = List.of("Hello", "World", "!");
 
         String red = beanProvider.getBean("red", String.class).value();
         Color redColor = beanProvider.getBean("redColor", Color.class).value();
@@ -53,16 +49,14 @@ public class BeanProviderTest {
         Color blueColor = beanProvider.getBean("blueColor", Color.class).value();
         Fruit banana = beanProvider.getBean("bananaFruit", Fruit.class).value();
         Fruit apple = beanProvider.getBean("apple", Apple.class).value();
-        List<Integer> texts = beanProvider.getBean("texts", new TypeToken<List<Integer>>() {
-        }).value();
+        String text = beanProvider.getBean("text", String.class).value();
         assertEquals(expectedRed, red);
         assertEquals(expectedRed, redColor.getAsText());
         assertEquals(expectedBlue, blue);
         assertEquals(expectedBlue, blueColor.getAsText());
+        assertEquals("Hello World !", text);
         assertNotNull(banana);
         assertNotNull(apple);
-        assertNotNull(texts);
-        assertEquals(expectedList, texts);
     }
 
     @Test
@@ -72,26 +66,26 @@ public class BeanProviderTest {
         Bean<Color> redBean = beanProvider.getBean("redColor", Color.class);
 
         // default config
-        assertEquals(blueBean.initConfig().isEnabled(), true);
+        assertTrue(blueBean.initConfig().isEnabled());
         assertEquals(blueBean.initConfig().order(), 0);
 
-        assertEquals(blueBean.runConfig().isEnabled(), true);
+        assertTrue(blueBean.runConfig().isEnabled());
         assertEquals(blueBean.runConfig().delay(), 0);
         assertEquals(blueBean.runConfig().repetitionPeriod(), 0);
         assertEquals(blueBean.runConfig().timeUnit(), SECONDS);
 
-        assertEquals(blueBean.closeConfig().isEnabled(), true);
+        assertTrue(blueBean.closeConfig().isEnabled());
         assertEquals(blueBean.closeConfig().order(), 0);
         // Lifecycle annotations
-        assertEquals(redBean.initConfig().isEnabled(), false);
+        assertFalse(redBean.initConfig().isEnabled());
         assertEquals(redBean.initConfig().order(), 1);
 
-        assertEquals(redBean.runConfig().isEnabled(), false);
+        assertFalse(redBean.runConfig().isEnabled());
         assertEquals(redBean.runConfig().delay(), 0);
         assertEquals(redBean.runConfig().repetitionPeriod(), 0);
         assertEquals(redBean.runConfig().timeUnit(), SECONDS);
 
-        assertEquals(redBean.closeConfig().isEnabled(), false);
+        assertFalse(redBean.closeConfig().isEnabled());
         assertEquals(redBean.closeConfig().order(), 3);
     }
 }

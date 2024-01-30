@@ -1,9 +1,10 @@
 package com.patryklikus.winter.beans;
 
+import java.lang.reflect.Type;
 import java.util.Objects;
 
 public record BeanKey(
-        String name, Class<?> classType
+        String name, Type classType
 ) {
     @Override
     public boolean equals(Object o) {

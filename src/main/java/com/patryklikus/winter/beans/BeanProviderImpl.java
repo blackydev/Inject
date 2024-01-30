@@ -7,12 +7,12 @@ import com.patryklikus.winter.lifecycle.Run;
 import com.patryklikus.winter.utils.searcher.ClassSearchException;
 import com.patryklikus.winter.utils.searcher.ClassSearcher;
 import com.patryklikus.winter.utils.searcher.ClassSearcherImpl;
-import dev.mccue.guava.reflect.TypeToken;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
+import java.lang.reflect.Type;
 import java.util.*;
 
 import static java.util.stream.Collectors.toCollection;
@@ -41,25 +41,23 @@ public class BeanProviderImpl implements BeanProvider {
         }
         extractMethods(getMethodsSortedByParameterCount());
 
-        beanWrappers = null;
         packageName = null;
+        beanWrappers = null;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public <T> Bean<T> getBean(String name, Class<T> classType) {
         BeanKey key = new BeanKey(name, classType);
-        return (Bean<T>) beans.get(key);
+        return (Bean<T>) beans.get(key); // todo what if null
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> Bean<T> getBean(String name, TypeToken<T> classType) {
-        System.out.println(classType);
-        BeanKey key = new BeanKey(name, classType.getRawType());
+    public <T> Bean<T> getBean(String name, Type classType) {
+        BeanKey key = new BeanKey(name, classType);
         return (Bean<T>) beans.get(key); // todo List<String> can return List<Integer> and won't throw exception if we won't use it
     }
-
 
     private List<Method> getMethodsSortedByParameterCount() {
         return beanWrappers.keySet().stream()
@@ -85,31 +83,29 @@ public class BeanProviderImpl implements BeanProvider {
     }
 
     private boolean tryToExtractMethod(Method method) {
-        BeanKey key = new BeanKey(method.getName(), method.getReturnType());
+        BeanKey key = new BeanKey(method.getName(), method.getGenericReturnType());
         if (beans.containsKey(key)) {
             throw new BeanInitializationException(
                     "More than one bean method has the same name and returned classType: " + key);
         }
-        Parameter[] params = method.getParameters();
-        Object[] existedArgs = Arrays.stream(params)
-                .map(param -> new BeanKey(param.getName(), param.getType()))
-                .map(beans::get)
-                .filter(Objects::nonNull)
-                .map(Bean::value)
-                .toArray();
-        if (params.length != existedArgs.length) {
-            return false;
+        var arguments = new LinkedList<>();
+        for (Parameter param : method.getParameters()) {
+            BeanKey paramKey = new BeanKey(param.getName(), param.getParameterizedType());
+            var bean = beans.get(paramKey);
+            if (bean == null) {
+                return false;
+            }
+            arguments.add(bean.value());
         }
-        Bean<?> bean = invokeBean(method, existedArgs);
+        Bean<?> bean = createBean(method, arguments);
         beans.put(key, bean);
         return true;
     }
 
-    private Bean<?> invokeBean(Method method, Object[] args) {
-        Object config = beanWrappers.get(method.getDeclaringClass());
-        Object beanValue;
+    private Bean<?> createBean(Method method, List<?> args) {
+        Object instance, config = beanWrappers.get(method.getDeclaringClass());
         try {
-            beanValue = method.invoke(config, args);
+            instance = method.invoke(config, args.toArray());
         } catch (Exception e) {
             // todo implement better errors
             String message = String.format("Error when trying to use beans method: %s#%s",
@@ -120,7 +116,7 @@ public class BeanProviderImpl implements BeanProvider {
         Init init = extractAnnotationSafety(method, Init.class);
         Run run = extractAnnotationSafety(method, Run.class);
         Close close = extractAnnotationSafety(method, Close.class);
-        return new Bean<>(beanValue, init, run, close);
+        return new Bean<>(instance, init, run, close);
     }
 
     private <T extends Annotation> T extractAnnotationSafety(Method method, Class<T> annotationClass) {
