@@ -1,13 +1,13 @@
 package beans;
 
+import beans.exampleProject.Main;
+import beans.exampleProject.models.Apple;
+import beans.exampleProject.models.Color;
+import beans.exampleProject.models.Fruit;
+import com.google.common.reflect.TypeToken;
 import com.patryklikus.winter.beans.Bean.Bean;
 import com.patryklikus.winter.beans.BeanProvider;
 import com.patryklikus.winter.beans.BeanProviderImpl;
-import dev.mccue.guava.reflect.TypeToken;
-import beans.exampleProject.Main;
-import beans.exampleProject.models.Color;
-import beans.exampleProject.models.fruits.Apple;
-import beans.exampleProject.models.fruits.Fruit;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,8 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class BeanProviderTest {
     private BeanProvider beanProvider;
@@ -43,55 +42,62 @@ public class BeanProviderTest {
     @Test
     @DisplayName("Should return each bean with correct value and type")
     void getBeanTest() {
-        String expectedRed = "red";
-        String expectedBlue = "blue";
-        List<String> expectedList = List.of("Hello", "World", "!");
-
+        Fruit apple = beanProvider.getBean("apple", Fruit.class).value();
         String red = beanProvider.getBean("red", String.class).value();
         Color redColor = beanProvider.getBean("redColor", Color.class).value();
-        String blue = beanProvider.getBean("blue", String.class).value();
-        Color blueColor = beanProvider.getBean("blueColor", Color.class).value();
-        Fruit banana = beanProvider.getBean("bananaFruit", Fruit.class).value();
-        Fruit apple = beanProvider.getBean("apple", Apple.class).value();
-        List<Integer> texts = beanProvider.getBean("texts", new TypeToken<List<Integer>>() {
+        List<String> textList = beanProvider.getBean("textList", new TypeToken<List<String>>() {
         }).value();
-        assertEquals(expectedRed, red);
-        assertEquals(expectedRed, redColor.getAsText());
-        assertEquals(expectedBlue, blue);
-        assertEquals(expectedBlue, blueColor.getAsText());
-        assertNotNull(banana);
+        String text = beanProvider.getBean("text", String.class).value();
+        int[] numbers = beanProvider.getBean("numbers", int[].class).value();
+        int sum = beanProvider.getBean("sum", int.class).value();
+
         assertNotNull(apple);
-        assertNotNull(texts);
-        assertEquals(expectedList, texts);
+        assertEquals("red", red);
+        assertEquals("red", redColor.getAsText());
+        assertEquals("Hello World !", text);
+        assertEquals(List.of("Hello", "World", "!"), textList);
+        assertArrayEquals(new int[]{1, 2, 3}, numbers);
+        assertEquals(6, sum);
+    }
+
+    @Test
+    @DisplayName("Shouldn't find bean if invalid type is provided")
+    void getBeanInvalidGenericTest() {
+        var apple = beanProvider.getBean("apple", Apple.class);
+        var result = beanProvider.getBean("textList", new TypeToken<List<Integer>>() {
+        });
+
+        assertNull(apple);
+        assertNull(result);
     }
 
     @Test
     @DisplayName("Should return beans with proper configuration")
     void getBeanLifePriorityTest() {
-        Bean<Color> blueBean = beanProvider.getBean("blueColor", Color.class);
-        Bean<Color> redBean = beanProvider.getBean("redColor", Color.class);
+        Bean<String> defaultBean = beanProvider.getBean("red", String.class);
+        Bean<Color> customBean = beanProvider.getBean("redColor", Color.class);
 
         // default config
-        assertEquals(blueBean.initConfig().isEnabled(), true);
-        assertEquals(blueBean.initConfig().order(), 0);
+        assertTrue(defaultBean.initConfig().isEnabled());
+        assertEquals(defaultBean.initConfig().order(), 0);
 
-        assertEquals(blueBean.runConfig().isEnabled(), true);
-        assertEquals(blueBean.runConfig().delay(), 0);
-        assertEquals(blueBean.runConfig().repetitionPeriod(), 0);
-        assertEquals(blueBean.runConfig().timeUnit(), SECONDS);
+        assertTrue(defaultBean.runConfig().isEnabled());
+        assertEquals(defaultBean.runConfig().delay(), 0);
+        assertEquals(defaultBean.runConfig().repetitionPeriod(), 0);
+        assertEquals(defaultBean.runConfig().timeUnit(), SECONDS);
 
-        assertEquals(blueBean.closeConfig().isEnabled(), true);
-        assertEquals(blueBean.closeConfig().order(), 0);
-        // Lifecycle annotations
-        assertEquals(redBean.initConfig().isEnabled(), false);
-        assertEquals(redBean.initConfig().order(), 1);
+        assertTrue(defaultBean.closeConfig().isEnabled());
+        assertEquals(defaultBean.closeConfig().order(), 0);
+        // with annotations
+        assertFalse(customBean.initConfig().isEnabled());
+        assertEquals(customBean.initConfig().order(), 1);
 
-        assertEquals(redBean.runConfig().isEnabled(), false);
-        assertEquals(redBean.runConfig().delay(), 0);
-        assertEquals(redBean.runConfig().repetitionPeriod(), 0);
-        assertEquals(redBean.runConfig().timeUnit(), SECONDS);
+        assertFalse(customBean.runConfig().isEnabled());
+        assertEquals(customBean.runConfig().delay(), 0);
+        assertEquals(customBean.runConfig().repetitionPeriod(), 0);
+        assertEquals(customBean.runConfig().timeUnit(), SECONDS);
 
-        assertEquals(redBean.closeConfig().isEnabled(), false);
-        assertEquals(redBean.closeConfig().order(), 3);
+        assertFalse(customBean.closeConfig().isEnabled());
+        assertEquals(customBean.closeConfig().order(), 3);
     }
 }

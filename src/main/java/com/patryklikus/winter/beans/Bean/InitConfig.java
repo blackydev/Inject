@@ -6,11 +6,6 @@ public class InitConfig {
     private final boolean enabled;
     private final short order;
 
-    public InitConfig(boolean enabled, short order) {
-        this.enabled = enabled;
-        this.order = order;
-    }
-
     InitConfig(Init init) {
         if (init == null) {
             enabled = true;

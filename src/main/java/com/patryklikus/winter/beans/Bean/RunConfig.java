@@ -11,14 +11,6 @@ public class RunConfig {
     private final long repetitionPeriod;
     private final TimeUnit timeUnit;
 
-    public RunConfig(boolean enabled, int corePoolSize, long delay, long repetitionPeriod, TimeUnit timeUnit) {
-        this.enabled = enabled;
-        this.corePoolSize = corePoolSize;
-        this.delay = delay;
-        this.repetitionPeriod = repetitionPeriod;
-        this.timeUnit = timeUnit;
-    }
-
     RunConfig(Run run) {
         if (run == null) {
             enabled = true;

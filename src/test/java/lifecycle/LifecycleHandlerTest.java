@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InOrder;
-import org.mockito.MockedStatic;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -31,12 +30,13 @@ public class LifecycleHandlerTest {
     @Test
     @DisplayName("Should init objects in correct order")
     void initTest() {
-        List<Bean<?>> mockedBeans = mockBeans(true, false, false);
-        List<Bean<?>> notSorted = toNotSorted(mockedBeans);
+        var mockedBeans = mockBeans(true, false, false);
+        var notSorted = toNotSorted(mockedBeans);
         mockedBeans.stream().map(Bean::initConfig).map(InitConfig::order).forEach(System.out::println);
         lifecycleHandler = new LifecycleHandlerImpl(notSorted);
 
         lifecycleHandler.init();
+
         InOrder inOrder = inOrder(mockedBeans.stream().map(Bean::value).toArray());
         for (var mock : mockedBeans) {
             inOrder.verify((Initable) mock.value()).init();
@@ -46,54 +46,49 @@ public class LifecycleHandlerTest {
     @Test
     @DisplayName("Should run objects")
     void runTest() {
-        List<Bean<?>> mockedBeans = mockBeans(false, true, false);
-        List<Bean<?>> notSorted = toNotSorted(mockedBeans);
+        var executor = mockStatic(Executors.class);
+        var mockedBeans = mockBeans(false, true, false);
+        var notSorted = toNotSorted(mockedBeans);
         lifecycleHandler = new LifecycleHandlerImpl(notSorted);
-        try (MockedStatic<Executors> executor = mockStatic(Executors.class)) {
-            var executorService = mock(ScheduledExecutorService.class);
-            executor.when(() -> Executors.newScheduledThreadPool(1)).thenReturn(executorService);
+        var executorService = mock(ScheduledExecutorService.class);
+        executor.when(() -> Executors.newScheduledThreadPool(1)).thenReturn(executorService);
 
-            lifecycleHandler.init();
+        lifecycleHandler.init();
 
-            for (var mock : mockedBeans) {
-                verify(executorService).schedule((Runnable) mock.value(), 0, TimeUnit.SECONDS);
-            }
+        for (var mock : mockedBeans) {
+            verify(executorService).schedule((Runnable) mock.value(), 0, TimeUnit.SECONDS);
         }
+        executor.close();
     }
 
     @ParameterizedTest
     @ValueSource(booleans = {true, false})
-    @DisplayName("Should schedule object in proper way")
+    @DisplayName("Should schedule object run")
     void runExecutorServicesTest(boolean withFixedDelay) {
-        int corePoolSize = 2;
-        int delay = 3;
+        var executor = mockStatic(Executors.class);
+        int corePoolSize = 2, delay = 3;
+        int repetitionPeriod = (withFixedDelay) ? 4 : 0;
         TimeUnit timeUnit = TimeUnit.MINUTES;
-        var bean = (withFixedDelay)
-                ? createRunnableMock(corePoolSize, delay, 4, timeUnit)
-                : createRunnableMock(corePoolSize, delay, 0, timeUnit);
-
+        var bean = mockRunnableBean(corePoolSize, delay, repetitionPeriod, timeUnit);
         lifecycleHandler = new LifecycleHandlerImpl(List.of(bean));
-        try (MockedStatic<Executors> executor = mockStatic(Executors.class)) {
-            var executorService = mock(ScheduledExecutorService.class);
-            executor.when(() -> Executors.newScheduledThreadPool(2)).thenReturn(executorService);
+        var executorService = mock(ScheduledExecutorService.class);
+        executor.when(() -> Executors.newScheduledThreadPool(corePoolSize)).thenReturn(executorService);
 
-            lifecycleHandler.init();
+        lifecycleHandler.init();
 
-            if (withFixedDelay)
-                verify(executorService).scheduleWithFixedDelay((Runnable) bean.value(), delay, 4, timeUnit);
-            else
-                verify(executorService).schedule((Runnable) bean.value(), delay, timeUnit);
-        }
+        if (withFixedDelay)
+            verify(executorService).scheduleWithFixedDelay((Runnable) bean.value(), delay, repetitionPeriod, timeUnit);
+        else
+            verify(executorService).schedule((Runnable) bean.value(), delay, timeUnit);
+        executor.close();
     }
 
     @Test
     @DisplayName("Should close objects in correct order")
     void closeTest() throws IOException {
-        List<Bean<?>> mockedBeans = mockBeans(false, false, true);
-        List<Bean<?>> notSorted = toNotSorted(mockedBeans);
-        lifecycleHandler = new LifecycleHandlerImpl(notSorted);
+        var mockedBeans = mockBeans(false, false, true);
+        lifecycleHandler = new LifecycleHandlerImpl(mockedBeans);
         lifecycleHandler.init();
-
         for (var mock : mockedBeans) {
             verify((Closeable) mock.value(), never()).close();
         }
@@ -106,38 +101,55 @@ public class LifecycleHandlerTest {
         }
     }
 
-    private Bean<?> createRunnableMock(int corePoolSize, long delay, long repetitionPeriod, TimeUnit timeUnit) {
+    private List<Bean<?>> mockBeans(boolean initable, boolean runnable, boolean closeable) {
+        List<Bean<?>> mocks = new ArrayList<>(TEST_BEANS_CAPACITY);
+        for (int i = 0; i < TEST_BEANS_CAPACITY; i++) {
+            var bean = mock(Bean.class);
+            when(bean.value()).thenReturn(mock(TestTemplate.class));
+
+            int order = i - TEST_BEANS_CAPACITY / 2;
+            mockInitConfig(bean, initable, order);
+            mockRunConfig(bean, runnable, 1, 0, 0, TimeUnit.SECONDS);
+            mockCloseConfig(bean, closeable, order);
+
+            mocks.add(bean);
+        }
+        return mocks;
+    }
+
+    private Bean<?> mockRunnableBean(int corePoolSize, long delay, long repetitionPeriod, TimeUnit timeUnit) {
         var bean = mock(Bean.class);
-        var template = new TestTemplate();
+        when(bean.value()).thenReturn(mock(TestTemplate.class));
 
-        when(bean.value()).thenReturn(template);
-        when(bean.initConfig()).thenReturn(new InitConfig(false, (short) 0));
-        when(bean.closeConfig()).thenReturn(new CloseConfig(false, (short) (0)));
-
-        var runConfig = new RunConfig(true, corePoolSize, delay, repetitionPeriod, timeUnit);
-        when(bean.runConfig()).thenReturn(runConfig);
+        mockInitConfig(bean, false, 0);
+        mockRunConfig(bean, true, corePoolSize, delay, repetitionPeriod, timeUnit);
+        mockCloseConfig(bean, false, 0);
 
         return bean;
     }
 
-    private List<Bean<?>> mockBeans(boolean initable, boolean runnable, boolean closeable) {
-        List<Bean<?>> mocks = new ArrayList<>(TEST_BEANS_CAPACITY);
-        for (int i = 0; i < TEST_BEANS_CAPACITY; i++) {
-            var template = mock(TestTemplate.class);
-            var bean = mock(Bean.class);
-            when(bean.value()).thenReturn(template);
+    private void mockInitConfig(Bean<?> bean, boolean initable, int order) {
+        var initConfig = mock(InitConfig.class);
+        when(initConfig.isEnabled()).thenReturn(initable);
+        when(initConfig.order()).thenReturn((short) order);
+        when(bean.initConfig()).thenReturn(initConfig);
+    }
 
-            var initConfig = new InitConfig(initable, (short) (i - TEST_BEANS_CAPACITY / 2));
-            when(bean.initConfig()).thenReturn(initConfig);
+    private void mockRunConfig(Bean<?> bean, boolean runnable, int corePoolSize, long delay, long repetitionPeriod, TimeUnit timeUnit) {
+        var runConfig = mock(RunConfig.class);
+        when(runConfig.isEnabled()).thenReturn(runnable);
+        when(runConfig.corePoolSize()).thenReturn(corePoolSize);
+        when(runConfig.delay()).thenReturn(delay);
+        when(runConfig.repetitionPeriod()).thenReturn(repetitionPeriod);
+        when(runConfig.timeUnit()).thenReturn(timeUnit);
+        when(bean.runConfig()).thenReturn(runConfig);
+    }
 
-            var runConfig = new RunConfig(runnable, 1, 0, 0, TimeUnit.SECONDS);
-            when(bean.runConfig()).thenReturn(runConfig);
-
-            var closeConfig = new CloseConfig(closeable, (short) (i - TEST_BEANS_CAPACITY / 2));
-            when(bean.closeConfig()).thenReturn(closeConfig);
-            mocks.add(bean);
-        }
-        return mocks;
+    private void mockCloseConfig(Bean<?> bean, boolean closeable, int order) {
+        var closeConfig = mock(CloseConfig.class);
+        when(closeConfig.isEnabled()).thenReturn(closeable);
+        when(closeConfig.order()).thenReturn((short) order);
+        when(bean.closeConfig()).thenReturn(closeConfig);
     }
 
     private List<Bean<?>> toNotSorted(List<Bean<?>> beans) {

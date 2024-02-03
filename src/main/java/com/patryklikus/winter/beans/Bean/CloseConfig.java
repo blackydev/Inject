@@ -6,11 +6,6 @@ public class CloseConfig {
     private final boolean enabled;
     private final short order;
 
-    public CloseConfig(boolean enabled, short order) {
-        this.enabled = enabled;
-        this.order = order;
-    }
-
     CloseConfig(Close close) {
         if (close == null) {
             enabled = true;
