@@ -63,7 +63,7 @@ public class LifecycleHandlerTest {
 
     @ParameterizedTest
     @ValueSource(booleans = {true, false})
-    @DisplayName("Should schedule object in proper way")
+    @DisplayName("Should schedule object run")
     void runExecutorServicesTest(boolean withFixedDelay) {
         var executor = mockStatic(Executors.class);
         int corePoolSize = 2, delay = 3;

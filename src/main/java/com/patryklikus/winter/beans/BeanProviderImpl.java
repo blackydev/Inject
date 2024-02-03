@@ -1,5 +1,6 @@
 package com.patryklikus.winter.beans;
 
+import com.google.common.reflect.TypeToken;
 import com.patryklikus.winter.beans.Bean.Bean;
 import com.patryklikus.winter.lifecycle.Close;
 import com.patryklikus.winter.lifecycle.Init;
@@ -12,7 +13,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
-import java.lang.reflect.Type;
 import java.util.*;
 
 import static java.util.stream.Collectors.toCollection;
@@ -47,16 +47,16 @@ public class BeanProviderImpl implements BeanProvider {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> Bean<T> getBean(String name, Class<T> classType) {
-        BeanKey key = new BeanKey(name, classType);
-        return (Bean<T>) beans.get(key); // todo what if null
+    public <T> Bean<T> getBean(String name, Class<T> type) {
+        BeanKey key = new BeanKey(name, type);
+        return (Bean<T>) beans.get(key);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> Bean<T> getBean(String name, Type classType) {
-        BeanKey key = new BeanKey(name, classType);
-        return (Bean<T>) beans.get(key); // todo List<String> can return List<Integer> and won't throw exception if we won't use it
+    public <T> Bean<T> getBean(String name, TypeToken<T> type) {
+        BeanKey key = new BeanKey(name, type.getType());
+        return (Bean<T>) beans.get(key);
     }
 
     private List<Method> getMethodsSortedByParameterCount() {

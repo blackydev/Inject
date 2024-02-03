@@ -1,8 +1,8 @@
 package utils;
 
 import beans.exampleProject.Main;
-import beans.exampleProject.models.config.FruitConfig;
-import beans.exampleProject.models.config.other.ColorConfig;
+import beans.exampleProject.config.AccessConfig;
+import beans.exampleProject.config.Config;
 import com.patryklikus.winter.beans.Beans;
 import com.patryklikus.winter.utils.searcher.ClassSearcher;
 import com.patryklikus.winter.utils.searcher.ClassSearcherImpl;
@@ -21,7 +21,7 @@ public class ClassSearcherImplTest {
     void getClassesRecursivelyTest() {
         var configSet = classSearcher.getClassesRecursively(Main.class.getPackageName(), Beans.class);
 
-        var expected = Set.of(ColorConfig.class, FruitConfig.class);
+        var expected = Set.of(Config.class, AccessConfig.class);
 
         assertEquals(expected, configSet);
     }

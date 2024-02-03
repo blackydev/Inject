@@ -1,4 +1,4 @@
-package beans.exampleProject.models.config.other;
+package beans.exampleProject.config;
 
 import beans.exampleProject.models.Color;
 import com.patryklikus.winter.beans.Beans;
@@ -6,10 +6,11 @@ import com.patryklikus.winter.lifecycle.Close;
 import com.patryklikus.winter.lifecycle.Init;
 import com.patryklikus.winter.lifecycle.Run;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Beans
-public class ColorConfig {
+public class Config {
     public String red() {
         return "red";
     }
@@ -21,19 +22,19 @@ public class ColorConfig {
         return new Color(red);
     }
 
-    public String blue() {
-        return "blue";
-    }
-
-    public Color blueColor(String blue) {
-        return new Color(blue);
-    }
-
     public List<String> textList() {
         return List.of("Hello", "World", "!");
     }
 
     public String text(List<String> textList) {
         return String.join(" ", textList);
+    }
+
+    public int[] numbers() {
+        return new int[]{1, 2, 3};
+    }
+
+    public int sum(int[] numbers) {
+        return Arrays.stream(numbers).sum();
     }
 }

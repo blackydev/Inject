@@ -10,6 +10,7 @@ repositories {
 }
 
 dependencies {
+    implementation 'com.google.guava:guava:33.0.0-jre'
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testImplementation 'org.mockito:mockito-core:5.6.0'
@@ -18,9 +19,6 @@ dependencies {
 test {
     useJUnitPlatform()
 }
-
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
 
 tasks.withType(JavaCompile).configureEach {
     options.compilerArgs << '-parameters'
