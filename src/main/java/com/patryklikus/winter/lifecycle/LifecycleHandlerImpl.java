@@ -1,9 +1,9 @@
+/* Copyright patryklikus.com All Rights Reserved. */
 package com.patryklikus.winter.lifecycle;
 
 import com.patryklikus.winter.beans.Bean.Bean;
 import com.patryklikus.winter.beans.Bean.RunConfig;
 import com.patryklikus.winter.beans.BeanProvider;
-
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.LinkedList;

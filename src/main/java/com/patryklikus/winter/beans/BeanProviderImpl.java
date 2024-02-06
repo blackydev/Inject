@@ -1,4 +1,7 @@
+/* Copyright patryklikus.com All Rights Reserved. */
 package com.patryklikus.winter.beans;
+
+import static java.util.stream.Collectors.toCollection;
 
 import com.google.common.reflect.TypeToken;
 import com.patryklikus.winter.beans.Bean.Bean;
@@ -8,14 +11,11 @@ import com.patryklikus.winter.lifecycle.Run;
 import com.patryklikus.winter.utils.searcher.ClassSearchException;
 import com.patryklikus.winter.utils.searcher.ClassSearcher;
 import com.patryklikus.winter.utils.searcher.ClassSearcherImpl;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
 import java.util.*;
-
-import static java.util.stream.Collectors.toCollection;
 
 public class BeanProviderImpl implements BeanProvider {
     private final Map<BeanKey, Bean<?>> beans;

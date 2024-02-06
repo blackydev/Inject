@@ -1,3 +1,4 @@
+/* Copyright patryklikus.com All Rights Reserved. */
 package com.patryklikus.winter.utils.searcher;
 
 import java.lang.annotation.Annotation;

@@ -1,15 +1,12 @@
+/* Copyright patryklikus.com All Rights Reserved. */
 package com.patryklikus.winter.lifecycle;
+
+import static org.mockito.Mockito.*;
 
 import com.patryklikus.winter.beans.Bean.Bean;
 import com.patryklikus.winter.beans.Bean.CloseConfig;
 import com.patryklikus.winter.beans.Bean.InitConfig;
 import com.patryklikus.winter.beans.Bean.RunConfig;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
-import org.mockito.InOrder;
-
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,8 +14,11 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
-import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.InOrder;
 
 public class LifecycleHandlerTest {
     private static final int TEST_BEANS_CAPACITY = 100;

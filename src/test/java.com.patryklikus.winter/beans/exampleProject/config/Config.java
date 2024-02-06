@@ -1,3 +1,4 @@
+/* Copyright patryklikus.com All Rights Reserved. */
 package com.patryklikus.winter.beans.exampleProject.config;
 
 import beans.exampleProject.models.Color;
@@ -5,7 +6,6 @@ import com.patryklikus.winter.beans.Beans;
 import com.patryklikus.winter.lifecycle.Close;
 import com.patryklikus.winter.lifecycle.Init;
 import com.patryklikus.winter.lifecycle.Run;
-
 import java.util.Arrays;
 import java.util.List;
 

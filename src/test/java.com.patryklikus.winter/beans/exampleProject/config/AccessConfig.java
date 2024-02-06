@@ -1,3 +1,4 @@
+/* Copyright patryklikus.com All Rights Reserved. */
 package com.patryklikus.winter.beans.exampleProject.config;
 
 import beans.exampleProject.models.Apple;

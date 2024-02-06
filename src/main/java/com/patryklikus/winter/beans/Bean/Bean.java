@@ -1,3 +1,4 @@
+/* Copyright patryklikus.com All Rights Reserved. */
 package com.patryklikus.winter.beans.Bean;
 
 import com.patryklikus.winter.lifecycle.Close;
@@ -14,4 +15,3 @@ public record Bean<T>(
         this(value, new InitConfig(init), new RunConfig(run), new CloseConfig(close));
     }
 }
-
