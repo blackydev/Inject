@@ -1,25 +1,43 @@
-plugins {
-    id 'java'
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    ext {
+        lombokVersion = '1.18.30'
+        // tests
+        junitVersion = '5.10.1'
+        mockitoVersion = '5.9.0'
+        mockitoVersion = '5.9.0'
+        // deployment
+        spotlessVersion = '6.23.3'
+    }
+    dependencies {
+        classpath "com.diffplug.spotless:spotless-plugin-gradle:${spotlessVersion}"
+    }
 }
 
-group = 'com.patryklikus.winter'
-version = '0.0'
+plugins {
+    id "com.diffplug.spotless" version "${spotlessVersion}"
+    id "com.github.ben-manes.versions" version "0.50.0"
+    id "com.github.hierynomus.license-report" version "0.16.1"
+    id "se.ascp.gradle.gradle-versions-filter" version "0.1.16"
+    id 'se.patrikerdes.use-latest-versions' version '0.2.18'
+}
+
+apply plugin: 'java-library'
 
 repositories {
     mavenCentral()
 }
 
-ext {
-    junitVersion = '5.10.1'
-    mockitoVersion = '5.9.0'
-}
-
-test {
-    useJUnitPlatform()
-}
+group = 'com.patryklikus'
+version = '0.0'
 
 dependencies {
-    implementation (
+    compileOnly "org.projectlombok:lombok:$lombokVersion"
+    annotationProcessor "org.projectlombok:lombok:$lombokVersion"
+
+    implementation(
             'com.google.guava:guava:33.0.0-jre'
     )
 
@@ -29,16 +47,22 @@ dependencies {
             "org.mockito:mockito-core:$mockitoVersion",
             "org.mockito:mockito-junit-jupiter:$mockitoVersion",
             'com.google.testing.compile:compile-testing:0.21.0'
-
     )
 
     testRuntimeOnly(
             "org.junit.jupiter:junit-jupiter-engine:$junitVersion",
-            "org.junit.platform:junit-platform-launcher:1.10.2",
+            "org.junit.platform:junit-platform-launcher:1.10.2"
     )
 }
 
+test {
+    useJUnitPlatform()
+}
 
+compileJava {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
 
 tasks.withType(JavaCompile).configureEach {
     options.compilerArgs << '-parameters'
