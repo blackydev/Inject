@@ -1,4 +1,4 @@
-package beans.exampleProject.models;
+package com.patryklikus.winter.beans.exampleProject.models;
 
 import java.util.Objects;
 

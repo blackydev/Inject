@@ -1,4 +1,4 @@
-package framework;
+package com.patryklikus.winter.framework;
 
 import com.google.testing.compile.Compilation;
 import com.google.testing.compile.CompilationSubject;

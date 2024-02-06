@@ -1,4 +1,4 @@
-package utils;
+package com.patryklikus.winter.utils;
 
 import beans.exampleProject.Main;
 import beans.exampleProject.config.AccessConfig;

@@ -1,4 +1,4 @@
-package beans.exampleProject.config;
+package com.patryklikus.winter.beans.exampleProject.config;
 
 import beans.exampleProject.models.Color;
 import com.patryklikus.winter.beans.Beans;

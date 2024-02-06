@@ -1,4 +1,4 @@
-package beans.exampleProject.config;
+package com.patryklikus.winter.beans.exampleProject.config;
 
 import beans.exampleProject.models.Apple;
 import beans.exampleProject.models.Fruit;
