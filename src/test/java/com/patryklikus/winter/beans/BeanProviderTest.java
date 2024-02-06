@@ -4,12 +4,12 @@ package com.patryklikus.winter.beans;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.junit.jupiter.api.Assertions.*;
 
-import beans.exampleProject.Main;
-import beans.exampleProject.models.Apple;
-import beans.exampleProject.models.Color;
-import beans.exampleProject.models.Fruit;
 import com.google.common.reflect.TypeToken;
 import com.patryklikus.winter.beans.Bean.Bean;
+import com.patryklikus.winter.beans.exampleProject.Main;
+import com.patryklikus.winter.beans.exampleProject.models.Apple;
+import com.patryklikus.winter.beans.exampleProject.models.Color;
+import com.patryklikus.winter.beans.exampleProject.models.Fruit;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +17,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-public class BeanProviderTest {
+class BeanProviderTest {
     private BeanProvider beanProvider;
 
     @BeforeEach
@@ -77,25 +77,25 @@ public class BeanProviderTest {
 
         // default config
         assertTrue(defaultBean.initConfig().isEnabled());
-        assertEquals(defaultBean.initConfig().order(), 0);
+        assertEquals(0, defaultBean.initConfig().order());
 
         assertTrue(defaultBean.runConfig().isEnabled());
-        assertEquals(defaultBean.runConfig().delay(), 0);
-        assertEquals(defaultBean.runConfig().repetitionPeriod(), 0);
-        assertEquals(defaultBean.runConfig().timeUnit(), SECONDS);
+        assertEquals(0, defaultBean.runConfig().delay());
+        assertEquals(0, defaultBean.runConfig().repetitionPeriod());
+        assertEquals(SECONDS, defaultBean.runConfig().timeUnit());
 
         assertTrue(defaultBean.closeConfig().isEnabled());
-        assertEquals(defaultBean.closeConfig().order(), 0);
+        assertEquals(0, defaultBean.closeConfig().order());
         // with annotations
         assertFalse(customBean.initConfig().isEnabled());
-        assertEquals(customBean.initConfig().order(), 1);
+        assertEquals(1, customBean.initConfig().order());
 
         assertFalse(customBean.runConfig().isEnabled());
-        assertEquals(customBean.runConfig().delay(), 0);
-        assertEquals(customBean.runConfig().repetitionPeriod(), 0);
-        assertEquals(customBean.runConfig().timeUnit(), SECONDS);
+        assertEquals(0, customBean.runConfig().delay());
+        assertEquals(0, customBean.runConfig().repetitionPeriod());
+        assertEquals(SECONDS, customBean.runConfig().timeUnit());
 
         assertFalse(customBean.closeConfig().isEnabled());
-        assertEquals(customBean.closeConfig().order(), 3);
+        assertEquals(3, customBean.closeConfig().order());
     }
 }

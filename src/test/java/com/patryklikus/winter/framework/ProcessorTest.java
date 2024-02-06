@@ -7,7 +7,7 @@ import com.google.testing.compile.Compiler;
 import com.google.testing.compile.JavaFileObjects;
 import org.junit.jupiter.api.Test;
 
-public class ProcessorTest {
+class ProcessorTest {
     @Test
     void t1() {
         Processor processor = new Processor();

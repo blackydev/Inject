@@ -20,7 +20,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InOrder;
 
-public class LifecycleHandlerTest {
+class LifecycleHandlerTest {
     private static final int TEST_BEANS_CAPACITY = 100;
     private LifecycleHandler lifecycleHandler;
 
