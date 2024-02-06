@@ -9,16 +9,36 @@ repositories {
     mavenCentral()
 }
 
-dependencies {
-    implementation 'com.google.guava:guava:33.0.0-jre'
-    testImplementation platform('org.junit:junit-bom:5.10.0')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
-    testImplementation 'org.mockito:mockito-core:5.6.0'
+ext {
+    junitVersion = '5.10.1'
+    mockitoVersion = '5.9.0'
 }
 
 test {
     useJUnitPlatform()
 }
+
+dependencies {
+    implementation (
+            'com.google.guava:guava:33.0.0-jre'
+    )
+
+    testImplementation(
+            "org.junit.jupiter:junit-jupiter-api:$junitVersion",
+            "org.junit.jupiter:junit-jupiter-params:$junitVersion",
+            "org.mockito:mockito-core:$mockitoVersion",
+            "org.mockito:mockito-junit-jupiter:$mockitoVersion",
+            'com.google.testing.compile:compile-testing:0.21.0'
+
+    )
+
+    testRuntimeOnly(
+            "org.junit.jupiter:junit-jupiter-engine:$junitVersion",
+            "org.junit.platform:junit-platform-launcher:1.10.2",
+    )
+}
+
+
 
 tasks.withType(JavaCompile).configureEach {
     options.compilerArgs << '-parameters'

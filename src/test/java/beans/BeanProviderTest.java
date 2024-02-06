@@ -1,4 +1,4 @@
-package beans;
+package com.patryklikus.winter.beans;
 
 import beans.exampleProject.Main;
 import beans.exampleProject.models.Apple;

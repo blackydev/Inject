@@ -46,6 +46,11 @@ public class BeanProviderImpl implements BeanProvider {
     }
 
     @Override
+    public Map<BeanKey, Bean<?>> getBeans() {
+        return beans;
+    }
+
+    @Override
     @SuppressWarnings("unchecked")
     public <T> Bean<T> getBean(String name, Class<T> type) {
         BeanKey key = new BeanKey(name, type);

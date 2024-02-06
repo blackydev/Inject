@@ -1,12 +1,9 @@
-package lifecycle;
+package com.patryklikus.winter.lifecycle;
 
 import com.patryklikus.winter.beans.Bean.Bean;
 import com.patryklikus.winter.beans.Bean.CloseConfig;
 import com.patryklikus.winter.beans.Bean.InitConfig;
 import com.patryklikus.winter.beans.Bean.RunConfig;
-import com.patryklikus.winter.lifecycle.Initable;
-import com.patryklikus.winter.lifecycle.LifecycleHandler;
-import com.patryklikus.winter.lifecycle.LifecycleHandlerImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -30,8 +27,8 @@ public class LifecycleHandlerTest {
     @Test
     @DisplayName("Should init objects in correct order")
     void initTest() {
-        var mockedBeans = mockBeans(true, false, false);
-        var notSorted = toNotSorted(mockedBeans);
+        List<Bean<?>> mockedBeans = mockBeans(true, false, false);
+        List<Bean<?>> notSorted = toNotSorted(mockedBeans);
         mockedBeans.stream().map(Bean::initConfig).map(InitConfig::order).forEach(System.out::println);
         lifecycleHandler = new LifecycleHandlerImpl(notSorted);
 

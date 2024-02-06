@@ -2,6 +2,7 @@ package com.patryklikus.winter.lifecycle;
 
 import com.patryklikus.winter.beans.Bean.Bean;
 import com.patryklikus.winter.beans.Bean.RunConfig;
+import com.patryklikus.winter.beans.BeanProvider;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -14,9 +15,14 @@ public class LifecycleHandlerImpl implements LifecycleHandler {
     private final List<Closeable> closeables;
     private List<Bean<?>> beans;
 
-    public LifecycleHandlerImpl(List<Bean<?>> beans) {
+    LifecycleHandlerImpl(List<Bean<?>> beans) {
         closeables = new LinkedList<>();
         this.beans = beans;
+    }
+
+    public LifecycleHandlerImpl(BeanProvider beanProvider) {
+        closeables = new LinkedList<>();
+        beans = (List<Bean<?>>) beanProvider.getBeans().values();
     }
 
     @Override
