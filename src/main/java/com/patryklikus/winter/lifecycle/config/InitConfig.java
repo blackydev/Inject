@@ -1,13 +1,15 @@
 /* Copyright patryklikus.com All Rights Reserved. */
-package com.patryklikus.winter.beans.Bean;
+package com.patryklikus.winter.lifecycle.config;
 
 import com.patryklikus.winter.lifecycle.Init;
+import lombok.Getter;
 
+@Getter
 public class InitConfig {
     private final boolean enabled;
     private final short order;
 
-    InitConfig(Init init) {
+    public InitConfig(Init init) {
         if (init == null) {
             enabled = true;
             order = 0;
@@ -17,11 +19,8 @@ public class InitConfig {
         }
     }
 
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public short order() {
-        return order;
+    public InitConfig(boolean enabled, short order) {
+        this.enabled = enabled;
+        this.order = order;
     }
 }

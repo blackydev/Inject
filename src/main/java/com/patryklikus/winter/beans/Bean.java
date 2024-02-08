@@ -1,9 +1,12 @@
 /* Copyright patryklikus.com All Rights Reserved. */
-package com.patryklikus.winter.beans.Bean;
+package com.patryklikus.winter.beans;
 
 import com.patryklikus.winter.lifecycle.Close;
 import com.patryklikus.winter.lifecycle.Init;
 import com.patryklikus.winter.lifecycle.Run;
+import com.patryklikus.winter.lifecycle.config.CloseConfig;
+import com.patryklikus.winter.lifecycle.config.InitConfig;
+import com.patryklikus.winter.lifecycle.config.RunConfig;
 
 public record Bean<T>(
         T value,

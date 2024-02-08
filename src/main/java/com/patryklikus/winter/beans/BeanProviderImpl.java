@@ -4,7 +4,6 @@ package com.patryklikus.winter.beans;
 import static java.util.stream.Collectors.toCollection;
 
 import com.google.common.reflect.TypeToken;
-import com.patryklikus.winter.beans.Bean.Bean;
 import com.patryklikus.winter.lifecycle.Close;
 import com.patryklikus.winter.lifecycle.Init;
 import com.patryklikus.winter.lifecycle.Run;
@@ -16,16 +15,18 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
 import java.util.*;
+import lombok.Getter;
 
 public class BeanProviderImpl implements BeanProvider {
+    @Getter
     private final Map<BeanKey, Bean<?>> beans;
     private Map<Class<?>, Object> beanWrappers;
     private String packageName;
 
-    public BeanProviderImpl(Class<?> Outermost) {
+    public BeanProviderImpl(Class<?> outermost) {
         beanWrappers = new HashMap<>();
         beans = new HashMap<>();
-        packageName = Outermost.getPackageName();
+        packageName = outermost.getPackageName();
     }
 
     @Override
@@ -43,11 +44,6 @@ public class BeanProviderImpl implements BeanProvider {
 
         packageName = null;
         beanWrappers = null;
-    }
-
-    @Override
-    public Map<BeanKey, Bean<?>> getBeans() {
-        return beans;
     }
 
     @Override

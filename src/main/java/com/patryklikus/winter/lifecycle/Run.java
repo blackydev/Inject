@@ -14,6 +14,8 @@ import java.util.concurrent.TimeUnit;
 public @interface Run {
     boolean enabled() default true;
 
+    short order() default 0;
+
     int corePoolSize() default 1;
 
     long delay() default 0;

@@ -5,7 +5,6 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.google.common.reflect.TypeToken;
-import com.patryklikus.winter.beans.Bean.Bean;
 import com.patryklikus.winter.beans.exampleProject.Main;
 import com.patryklikus.winter.beans.exampleProject.models.Apple;
 import com.patryklikus.winter.beans.exampleProject.models.Color;
@@ -77,25 +76,25 @@ class BeanProviderTest {
 
         // default config
         assertTrue(defaultBean.initConfig().isEnabled());
-        assertEquals(0, defaultBean.initConfig().order());
+        assertEquals(0, defaultBean.initConfig().getOrder());
 
         assertTrue(defaultBean.runConfig().isEnabled());
-        assertEquals(0, defaultBean.runConfig().delay());
-        assertEquals(0, defaultBean.runConfig().repetitionPeriod());
-        assertEquals(SECONDS, defaultBean.runConfig().timeUnit());
+        assertEquals(0, defaultBean.runConfig().getDelay());
+        assertEquals(0, defaultBean.runConfig().getRepetitionPeriod());
+        assertEquals(SECONDS, defaultBean.runConfig().getTimeUnit());
 
         assertTrue(defaultBean.closeConfig().isEnabled());
-        assertEquals(0, defaultBean.closeConfig().order());
+        assertEquals(0, defaultBean.closeConfig().getOrder());
         // with annotations
         assertFalse(customBean.initConfig().isEnabled());
-        assertEquals(1, customBean.initConfig().order());
+        assertEquals(1, customBean.initConfig().getOrder());
 
         assertFalse(customBean.runConfig().isEnabled());
-        assertEquals(0, customBean.runConfig().delay());
-        assertEquals(0, customBean.runConfig().repetitionPeriod());
-        assertEquals(SECONDS, customBean.runConfig().timeUnit());
+        assertEquals(0, customBean.runConfig().getDelay());
+        assertEquals(0, customBean.runConfig().getRepetitionPeriod());
+        assertEquals(SECONDS, customBean.runConfig().getTimeUnit());
 
         assertFalse(customBean.closeConfig().isEnabled());
-        assertEquals(3, customBean.closeConfig().order());
+        assertEquals(3, customBean.closeConfig().getOrder());
     }
 }
