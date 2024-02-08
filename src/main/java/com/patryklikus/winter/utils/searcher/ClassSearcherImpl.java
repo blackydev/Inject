@@ -1,4 +1,8 @@
+/* Copyright patryklikus.com All Rights Reserved. */
 package com.patryklikus.winter.utils.searcher;
+
+import static java.util.Collections.emptySet;
+import static java.util.stream.Collectors.toCollection;
 
 import java.io.File;
 import java.lang.annotation.Annotation;
@@ -6,9 +10,6 @@ import java.net.URL;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
-
-import static java.util.Collections.emptySet;
-import static java.util.stream.Collectors.toCollection;
 
 public class ClassSearcherImpl implements ClassSearcher {
     private static final String ERROR_MESSAGE = "Unexpected error occurs when try to find all classes inside package";

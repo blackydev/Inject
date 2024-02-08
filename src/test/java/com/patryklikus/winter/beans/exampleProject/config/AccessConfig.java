@@ -1,8 +1,9 @@
-package beans.exampleProject.config;
+/* Copyright patryklikus.com All Rights Reserved. */
+package com.patryklikus.winter.beans.exampleProject.config;
 
-import beans.exampleProject.models.Apple;
-import beans.exampleProject.models.Fruit;
 import com.patryklikus.winter.beans.Beans;
+import com.patryklikus.winter.beans.exampleProject.models.Apple;
+import com.patryklikus.winter.beans.exampleProject.models.Fruit;
 
 @Beans
 public class AccessConfig {

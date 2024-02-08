@@ -1,3 +1,4 @@
+/* Copyright patryklikus.com All Rights Reserved. */
 package com.patryklikus.winter.beans;
 
 public class BeanInitializationException extends RuntimeException {

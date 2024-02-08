@@ -1,19 +1,19 @@
-package utils;
-
-import beans.exampleProject.Main;
-import beans.exampleProject.config.AccessConfig;
-import beans.exampleProject.config.Config;
-import com.patryklikus.winter.beans.Beans;
-import com.patryklikus.winter.utils.searcher.ClassSearcher;
-import com.patryklikus.winter.utils.searcher.ClassSearcherImpl;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
-import java.util.Set;
+/* Copyright patryklikus.com All Rights Reserved. */
+package com.patryklikus.winter.utils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ClassSearcherImplTest {
+import com.patryklikus.winter.beans.Beans;
+import com.patryklikus.winter.beans.exampleProject.Main;
+import com.patryklikus.winter.beans.exampleProject.config.AccessConfig;
+import com.patryklikus.winter.beans.exampleProject.config.Config;
+import com.patryklikus.winter.utils.searcher.ClassSearcher;
+import com.patryklikus.winter.utils.searcher.ClassSearcherImpl;
+import java.util.Set;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+class ClassSearcherImplTest {
     private static final ClassSearcher classSearcher = new ClassSearcherImpl();
 
     @Test

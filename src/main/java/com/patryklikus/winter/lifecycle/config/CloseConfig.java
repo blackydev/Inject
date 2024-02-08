@@ -1,12 +1,15 @@
-package com.patryklikus.winter.beans.Bean;
+/* Copyright patryklikus.com All Rights Reserved. */
+package com.patryklikus.winter.lifecycle.config;
 
 import com.patryklikus.winter.lifecycle.Close;
+import lombok.Getter;
 
+@Getter
 public class CloseConfig {
     private final boolean enabled;
     private final short order;
 
-    CloseConfig(Close close) {
+    public CloseConfig(Close close) {
         if (close == null) {
             enabled = true;
             order = 0;
@@ -16,11 +19,8 @@ public class CloseConfig {
         }
     }
 
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public short order() {
-        return order;
+    public CloseConfig(boolean enabled, short order) {
+        this.enabled = enabled;
+        this.order = order;
     }
 }

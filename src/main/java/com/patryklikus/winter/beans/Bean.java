@@ -1,8 +1,12 @@
-package com.patryklikus.winter.beans.Bean;
+/* Copyright patryklikus.com All Rights Reserved. */
+package com.patryklikus.winter.beans;
 
 import com.patryklikus.winter.lifecycle.Close;
 import com.patryklikus.winter.lifecycle.Init;
 import com.patryklikus.winter.lifecycle.Run;
+import com.patryklikus.winter.lifecycle.config.CloseConfig;
+import com.patryklikus.winter.lifecycle.config.InitConfig;
+import com.patryklikus.winter.lifecycle.config.RunConfig;
 
 public record Bean<T>(
         T value,
@@ -14,4 +18,3 @@ public record Bean<T>(
         this(value, new InitConfig(init), new RunConfig(run), new CloseConfig(close));
     }
 }
-

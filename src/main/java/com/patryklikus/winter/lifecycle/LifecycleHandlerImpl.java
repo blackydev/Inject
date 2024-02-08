@@ -1,8 +1,9 @@
+/* Copyright patryklikus.com All Rights Reserved. */
 package com.patryklikus.winter.lifecycle;
 
-import com.patryklikus.winter.beans.Bean.Bean;
-import com.patryklikus.winter.beans.Bean.RunConfig;
-
+import com.patryklikus.winter.beans.Bean;
+import com.patryklikus.winter.beans.BeanProvider;
+import com.patryklikus.winter.lifecycle.config.RunConfig;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.LinkedList;
@@ -14,9 +15,14 @@ public class LifecycleHandlerImpl implements LifecycleHandler {
     private final List<Closeable> closeables;
     private List<Bean<?>> beans;
 
-    public LifecycleHandlerImpl(List<Bean<?>> beans) {
+    LifecycleHandlerImpl(List<Bean<?>> beans) {
         closeables = new LinkedList<>();
         this.beans = beans;
+    }
+
+    public LifecycleHandlerImpl(BeanProvider beanProvider) {
+        closeables = new LinkedList<>();
+        beans = (List<Bean<?>>) beanProvider.getBeans().values();
     }
 
     @Override
@@ -51,7 +57,10 @@ public class LifecycleHandlerImpl implements LifecycleHandler {
     }
 
     private void runBeans() {
-        beans.stream().filter(bean -> bean.runConfig().isEnabled()).forEach(this::scheduleTask);
+        beans.stream()
+                .filter(bean -> bean.runConfig().isEnabled())
+                .sorted(this::compareRunOrder)
+                .forEach(this::scheduleTask);
     }
 
     private void setCloseableBeans() {
@@ -59,27 +68,31 @@ public class LifecycleHandlerImpl implements LifecycleHandler {
                 .filter(bean -> bean.closeConfig().isEnabled())
                 .sorted(this::compareClosePriority)
                 .map(Bean::value)
-                .filter(v -> v instanceof Closeable)
+                .filter(Closeable.class::isInstance)
                 .map(c -> (Closeable) c)
                 .forEach(closeables::add);
     }
 
     private int compareInitOrder(Bean<?> i1, Bean<?> i2) {
-        return Short.compare(i1.initConfig().order(), i2.initConfig().order());
+        return Short.compare(i1.initConfig().getOrder(), i2.initConfig().getOrder());
+    }
+
+    private int compareRunOrder(Bean<?> i1, Bean<?> i2) {
+        return Short.compare(i1.runConfig().getOrder(), i2.runConfig().getOrder());
     }
 
     private int compareClosePriority(Bean<?> i1, Bean<?> i2) {
-        return Short.compare(i1.closeConfig().order(), i2.closeConfig().order());
+        return Short.compare(i1.closeConfig().getOrder(), i2.closeConfig().getOrder());
     }
 
     private void scheduleTask(Bean<?> bean) {
         if (bean.value() instanceof Runnable runnable) {
             RunConfig config = bean.runConfig();
-            ScheduledExecutorService executor = Executors.newScheduledThreadPool(config.corePoolSize());
-            if (config.repetitionPeriod() == 0)
-                executor.schedule(runnable, config.delay(), config.timeUnit());
+            ScheduledExecutorService executor = Executors.newScheduledThreadPool(config.getCorePoolSize());
+            if (config.getRepetitionPeriod() == 0)
+                executor.schedule(runnable, config.getDelay(), config.getTimeUnit());
             else
-                executor.scheduleWithFixedDelay(runnable, config.delay(), config.repetitionPeriod(), config.timeUnit());
+                executor.scheduleWithFixedDelay(runnable, config.getDelay(), config.getRepetitionPeriod(), config.getTimeUnit());
         }
     }
 }

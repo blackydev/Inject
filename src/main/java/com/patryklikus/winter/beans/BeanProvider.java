@@ -1,8 +1,9 @@
+/* Copyright patryklikus.com All Rights Reserved. */
 package com.patryklikus.winter.beans;
 
 import com.google.common.reflect.TypeToken;
-import com.patryklikus.winter.beans.Bean.Bean;
 import com.patryklikus.winter.lifecycle.Initable;
+import java.util.Map;
 
 public interface BeanProvider extends Initable {
     /**
@@ -14,6 +15,8 @@ public interface BeanProvider extends Initable {
      * @throws BeanInitializationException if any {@link Beans} superclass is other than {@link Object}
      */
     void init() throws BeanInitializationException;
+
+    Map<BeanKey, Bean<?>> getBeans();
 
     <T> Bean<T> getBean(String name, Class<T> type);
 
