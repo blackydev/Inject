@@ -65,17 +65,3 @@ tasks.withType(JavaCompile).configureEach {
     options.compilerArgs << '-parameters'
     // todo it have to be checked how it behaves when we will use Winter library in other project
 }
-
-spotless {
-    java {
-        //noinspection GroovyAccessibility
-        target project.fileTree(project.rootDir) {
-            include '**/*.java'
-        }
-        indentWithSpaces()
-        removeUnusedImports()
-        trimTrailingWhitespace()
-        importOrder 'static', ''
-        licenseHeader('/* Copyright patryklikus.com All Rights Reserved. */')
-    }
-}
