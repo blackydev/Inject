@@ -7,16 +7,10 @@ buildscript {
         // tests
         junitVersion = '5.10.2'
         mockitoVersion = '5.10.0'
-        // deployment
-        spotlessVersion = '6.25.0'
-    }
-    dependencies {
-        classpath "com.diffplug.spotless:spotless-plugin-gradle:${spotlessVersion}"
     }
 }
 
 plugins {
-    id "com.diffplug.spotless" version "${spotlessVersion}"
     id "se.ascp.gradle.gradle-versions-filter" version "0.1.16"
     id 'se.patrikerdes.use-latest-versions' version '0.2.18'
 }
@@ -63,19 +57,4 @@ compileJava {
 
 tasks.withType(JavaCompile).configureEach {
     options.compilerArgs << '-parameters'
-    // todo it have to be checked how it behaves when we will use Winter library in other project
-}
-
-spotless {
-    java {
-        //noinspection GroovyAccessibility
-        target project.fileTree(project.rootDir) {
-            include '**/*.java'
-        }
-        indentWithSpaces()
-        removeUnusedImports()
-        trimTrailingWhitespace()
-        importOrder 'static', ''
-        licenseHeader('/* Copyright patryklikus.com All Rights Reserved. */')
-    }
 }

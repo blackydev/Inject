@@ -1,9 +1,12 @@
-# Winter
+# Dependency Injection Helper Demo
 
-Winter is a library that provides a mechanism for dependency injection and allows easy management of the life cycle of
-objects.
+Dependency Injection Helper Demo is an experimental Java library created as part of a personal coding challenge. This
+project aims to demonstrate fundamental techniques of dependency injection and object lifecycle management in Java
+applications. Although not all lifecycle features are fully implemented, it serves as a valuable resource for learning
+and gaining experience.
 
 ## Example usage
+
 ```java
 class Launcher {
     public static void main(String[] args) {
@@ -14,7 +17,9 @@ class Launcher {
     }
 }
 ```
+
 ```java
+
 @Beans
 public class Config {
     public String red() {
@@ -34,4 +39,4 @@ public class Config {
 
 ## License
 
-All rights reserved. If you want to use it [contact me](https://www.linkedin.com/in/patryklikus).
+GNU General Public License
