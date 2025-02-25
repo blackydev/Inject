@@ -1,20 +1,21 @@
 /* Copyright patryklikus.com All Rights Reserved. */
 package com.patryklikus.winter.beans;
 
-import static java.util.concurrent.TimeUnit.SECONDS;
-import static org.junit.jupiter.api.Assertions.*;
-
 import com.google.common.reflect.TypeToken;
 import com.patryklikus.winter.beans.exampleProject.Main;
 import com.patryklikus.winter.beans.exampleProject.models.Apple;
 import com.patryklikus.winter.beans.exampleProject.models.Color;
 import com.patryklikus.winter.beans.exampleProject.models.Fruit;
-import java.lang.reflect.Field;
-import java.util.List;
-import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import java.lang.reflect.Field;
+import java.util.List;
+import java.util.Map;
+
+import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.junit.jupiter.api.Assertions.*;
 
 class BeanProviderTest {
     private BeanProvider beanProvider;

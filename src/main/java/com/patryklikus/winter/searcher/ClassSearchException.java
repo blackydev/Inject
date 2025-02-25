@@ -1,5 +1,5 @@
 /* Copyright patryklikus.com All Rights Reserved. */
-package com.patryklikus.winter.utils.searcher;
+package com.patryklikus.winter.searcher;
 
 public class ClassSearchException extends RuntimeException {
     ClassSearchException(String message) {

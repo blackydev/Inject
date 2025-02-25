@@ -1,8 +1,5 @@
 /* Copyright patryklikus.com All Rights Reserved. */
-package com.patryklikus.winter.utils.searcher;
-
-import static java.util.Collections.emptySet;
-import static java.util.stream.Collectors.toCollection;
+package com.patryklikus.winter.searcher;
 
 import java.io.File;
 import java.lang.annotation.Annotation;
@@ -11,7 +8,10 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-public class ClassSearcherImpl implements ClassSearcher {
+import static java.util.Collections.emptySet;
+import static java.util.stream.Collectors.toCollection;
+
+public class ClassSearcher {
     private static final String ERROR_MESSAGE = "Unexpected error occurs when try to find all classes inside package";
 
     /**
@@ -26,7 +26,13 @@ public class ClassSearcherImpl implements ClassSearcher {
                 .filter(File::isDirectory);
     }
 
-    @Override
+    /**
+     * Gets all classes from package and sub-packages recursively. Filters packages which does not have passed annotation.
+     *
+     * @param packageName where searching starts
+     * @param annotation  which classes must have
+     * @return classes with provided annotation inside package and all sub-packages
+     */
     public Set<Class<?>> getClassesRecursively(String packageName, Class<? extends Annotation> annotation) throws ClassSearchException {
         return getDirectory(packageName)
                 .map(dir -> findClasses(new HashSet<>(), dir, packageName))

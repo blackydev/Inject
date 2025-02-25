@@ -1,21 +1,21 @@
 /* Copyright patryklikus.com All Rights Reserved. */
 package com.patryklikus.winter.beans;
 
-import static java.util.stream.Collectors.toCollection;
-
 import com.google.common.reflect.TypeToken;
 import com.patryklikus.winter.lifecycle.Close;
 import com.patryklikus.winter.lifecycle.Init;
 import com.patryklikus.winter.lifecycle.Run;
-import com.patryklikus.winter.utils.searcher.ClassSearchException;
-import com.patryklikus.winter.utils.searcher.ClassSearcher;
-import com.patryklikus.winter.utils.searcher.ClassSearcherImpl;
+import com.patryklikus.winter.searcher.ClassSearchException;
+import com.patryklikus.winter.searcher.ClassSearcher;
+import lombok.Getter;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
 import java.util.*;
-import lombok.Getter;
+
+import static java.util.stream.Collectors.toCollection;
 
 public class BeanProviderImpl implements BeanProvider {
     @Getter
@@ -31,7 +31,7 @@ public class BeanProviderImpl implements BeanProvider {
 
     @Override
     public void init() {
-        ClassSearcher classSearcher = new ClassSearcherImpl();
+        ClassSearcher classSearcher = new ClassSearcher();
         try {
             classSearcher.getClassesRecursively(packageName, Beans.class).stream()
                     .peek(this::validateBeanWrapper)

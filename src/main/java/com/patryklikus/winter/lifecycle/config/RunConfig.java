@@ -2,8 +2,9 @@
 package com.patryklikus.winter.lifecycle.config;
 
 import com.patryklikus.winter.lifecycle.Run;
-import java.util.concurrent.TimeUnit;
 import lombok.Getter;
+
+import java.util.concurrent.TimeUnit;
 
 @Getter
 public class RunConfig {

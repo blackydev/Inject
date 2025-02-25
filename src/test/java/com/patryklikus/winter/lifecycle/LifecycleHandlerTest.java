@@ -1,21 +1,10 @@
 /* Copyright patryklikus.com All Rights Reserved. */
 package com.patryklikus.winter.lifecycle;
 
-import static java.util.Collections.singletonList;
-import static org.mockito.Mockito.*;
-
 import com.patryklikus.winter.beans.Bean;
 import com.patryklikus.winter.lifecycle.config.CloseConfig;
 import com.patryklikus.winter.lifecycle.config.InitConfig;
 import com.patryklikus.winter.lifecycle.config.RunConfig;
-import java.io.Closeable;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
@@ -25,6 +14,18 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.io.Closeable;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
+import static java.util.Collections.singletonList;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class LifecycleHandlerTest {
@@ -41,7 +42,7 @@ class LifecycleHandlerTest {
     void initTest() {
         List<Bean<?>> beans = createBeans(true, false, false);
         var notSorted = toNotSorted(beans);
-        lifecycleHandler = new LifecycleHandlerImpl(notSorted);
+        lifecycleHandler = new LifecycleHandler(notSorted);
 
         lifecycleHandler.init();
 
@@ -58,7 +59,7 @@ class LifecycleHandlerTest {
         var beans = createBeans(false, true, false);
         beans.stream().map(Bean::runConfig).map(RunConfig::getDelay).forEach(System.out::println);
         var notSorted = toNotSorted(beans);
-        lifecycleHandler = new LifecycleHandlerImpl(notSorted);
+        lifecycleHandler = new LifecycleHandler(notSorted);
         executor.when(() -> Executors.newScheduledThreadPool(1)).thenReturn(scheduledExecutorService);
 
         lifecycleHandler.init();
@@ -87,7 +88,7 @@ class LifecycleHandlerTest {
         var closeConfig = new CloseConfig(false, order);
         var bean = new Bean<>(mockedLifeable, initConfig, runConfig, closeConfig);
 
-        lifecycleHandler = new LifecycleHandlerImpl(singletonList(bean));
+        lifecycleHandler = new LifecycleHandler(singletonList(bean));
 
         lifecycleHandler.init();
 
@@ -102,7 +103,7 @@ class LifecycleHandlerTest {
     @DisplayName("Should close objects in correct order")
     void closeTest() throws IOException {
         var mockedBeans = createBeans(false, false, true);
-        lifecycleHandler = new LifecycleHandlerImpl(mockedBeans);
+        lifecycleHandler = new LifecycleHandler(mockedBeans);
         lifecycleHandler.init();
         for (var mock : mockedBeans) {
             verify((Closeable) mock.value(), never()).close();

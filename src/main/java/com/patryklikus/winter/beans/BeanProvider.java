@@ -3,6 +3,7 @@ package com.patryklikus.winter.beans;
 
 import com.google.common.reflect.TypeToken;
 import com.patryklikus.winter.lifecycle.Initable;
+
 import java.util.Map;
 
 public interface BeanProvider extends Initable {
